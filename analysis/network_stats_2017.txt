@@ -1,0 +1,9 @@
+Railway Network Statistics for 2017
+========================================
+year: 2017
+nodes: 1488
+edges: 744
+connected_components: 744
+density: 0.0006724949562878278
+stations_with_province: 1488
+unique_provinces: 30

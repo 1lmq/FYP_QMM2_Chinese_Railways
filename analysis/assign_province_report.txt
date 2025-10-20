@@ -1,0 +1,44 @@
+Station Province Assignment Report
+Generated: 2025-11-03 14:19:33.903724
+
+Total unique stations: 1488
+Stations with province assigned: 1488
+Stations without coordinates: 0
+
+Province distribution:
+  辽宁省: 94 stations
+  江西省: 92 stations
+  河南省: 90 stations
+  山东省: 90 stations
+  四川省: 90 stations
+  河北省: 87 stations
+  山西省: 85 stations
+  黑龙江省: 79 stations
+  湖南省: 74 stations
+  吉林省: 71 stations
+  内蒙古自治区: 63 stations
+  甘肃省: 58 stations
+  安徽省: 58 stations
+  陕西省: 57 stations
+  江苏省: 49 stations
+  云南省: 49 stations
+  广东省: 49 stations
+  湖北省: 48 stations
+  广西壮族自治区: 47 stations
+  重庆市: 28 stations
+  新疆维吾尔自治区: 28 stations
+  贵州省: 22 stations
+  福建省: 21 stations
+  宁夏回族自治区: 18 stations
+  青海省: 15 stations
+  浙江省: 11 stations
+  海南省: 9 stations
+  西藏自治区: 3 stations
+  上海市: 2 stations
+  天津市: 1 stations
+
+Distance to nearest city statistics:
+  Mean: 13.70 km
+  Median: 7.47 km
+  Min: 0.19 km
+  Max: 348.77 km
