@@ -6,6 +6,19 @@ import itertools
 import numpy as np
 from pathlib import Path
 from folium import plugins
+import unicodedata
+import re
+
+def normalize_name(name):
+    """规范化站点名称以改善匹配"""
+    if pd.isna(name):
+        return ""
+    s = str(name)
+    s = unicodedata.normalize('NFKC', s)  # Unicode规范化
+    s = s.strip()  # 去除首尾空格
+    s = re.sub(r'\s+', ' ', s)  # 统一内部空格
+    s = re.sub(r'[\(\)\[\]\\/\\\-\.,。,··•"]+', '', s)  # 去除常见标点
+    return s.lower()
 
 def main():
     """Main function containing all execution logic"""
@@ -31,12 +44,15 @@ def main():
         print(f"✓ Loaded {len(stations_df)} stations")
         print(f"✓ Loaded {len(tracks_df)} track records")
         
-        # Create station mapping
-        name_to_id = dict(zip(stations_df['station_name'], stations_df['station_id']))
+        # Create station mapping using normalized names
+        name_to_id = {}
+        for _, row in stations_df.iterrows():
+            normalized = normalize_name(row['station_name'])
+            name_to_id[normalized] = row['station_id']
         
-        # Create network graph
+        # Create network graph - Using MultiDiGraph to preserve parallel edges
         print("\n🔗 Building network graph...")
-        G = nx.DiGraph()
+        G = nx.MultiDiGraph()
         
         # Add nodes
         for _, row in stations_df.iterrows():
@@ -64,15 +80,23 @@ def main():
         for _, row in tracks_df.iterrows():
             start_name = row['start_station'] 
             end_name = row['end_station']
-            start_id = name_to_id.get(start_name)
-            end_id = name_to_id.get(end_name)
+            # 使用规范化名称进行匹配
+            start_normalized = normalize_name(start_name)
+            end_normalized = normalize_name(end_name)
+            start_id = name_to_id.get(start_normalized)
+            end_id = name_to_id.get(end_normalized)
             
             if start_id and end_id:
-                year_val = row['year'] if pd.notna(row['year']) else 2000
+                # 严格遵守"不推断年份"规则 - 仅使用CSV原始年份
+                year_val = row['year'] if pd.notna(row['year']) else None
+                year_int = int(year_val) if year_val is not None else None
+                
                 G.add_edge(start_id, end_id, 
                           length=row['length'], 
-                          year=int(year_val), 
-                          type=row['type_standardized'])
+                          year=year_int, 
+                          year_raw=row['year'],  # 保存原始值
+                          type=row['type_standardized'],
+                          edge_id=row.get('edge_id'))
                 edges_added += 1
             else:
                 if not start_id:
@@ -128,12 +152,18 @@ def main():
         
         stations_map_df = pd.DataFrame(stations_for_map)
         
-        # Create edge data
+        # Create edge data - MultiDiGraph requires keys parameter for iteration
         edges_for_map = []
-        for edge in G.edges():
-            source_node = G.nodes[edge[0]]
-            target_node = G.nodes[edge[1]]
-            edge_data = G.edges[edge]
+        rail_edges_total = 0
+        
+        for u, v, key, edge_data in G.edges(keys=True, data=True):
+            # 只处理轨道类型的边
+            if not (edge_data.get('type', '').lower().find('rail') != -1):
+                continue
+                
+            rail_edges_total += 1
+            source_node = G.nodes[u]
+            target_node = G.nodes[v]
             
             if (not pd.isna(source_node.get('latitude')) and not pd.isna(source_node.get('longitude')) and
                 not pd.isna(target_node.get('latitude')) and not pd.isna(target_node.get('longitude'))):
@@ -146,11 +176,15 @@ def main():
                     'start_name': source_node['name'],
                     'end_name': target_node['name'],
                     'length': edge_data['length'],
-                    'year': edge_data['year'],
+                    'year': edge_data.get('year'),
+                    'year_raw': edge_data.get('year_raw'),
+                    'edge_id': edge_data.get('edge_id'),
                     'type': edge_data['type']
                 })
         
         print(f"✓ Prepared {len(stations_for_map)} stations and {len(edges_for_map)} connections")
+        print(f"✓ Total rail edges in network: {rail_edges_total}")
+        print(f"✓ Rail edges with coordinates: {len(edges_for_map)}")
         
         # Create map
         print("\n🎨 Creating Folium map...")
@@ -188,17 +222,21 @@ def main():
                         [edge['end_lat'], edge['end_lon']]
                     ]
                     
-                    year_display = int(edge['year']) if pd.notna(edge['year']) else 'Unknown'
+                    # 年份显示 - 严格按原始CSV，不推断
+                    year_val = edge.get('year')
+                    year_display = int(year_val) if (year_val is not None and not pd.isna(year_val)) else '年份缺失'
+                    
+                    edge_id_text = f"Edge ID: {edge.get('edge_id', 'N/A')}<br>" if edge.get('edge_id') else ""
                     popup_text = f"""
-                    <b>Track Connection</b><br>
-                    Start: {edge['start_name']}<br>
-                    End: {edge['end_name']}<br>
-                    <b>Length:</b> {edge['length']:.2f} km<br>
-                    <b>Construction Year:</b> {year_display}<br>
-                    <b>Track Type:</b> {type_names.get(edge['type'], edge['type'])}
+                    <b>轨道连接</b><br>
+                    {edge_id_text}起点: {edge['start_name']}<br>
+                    终点: {edge['end_name']}<br>
+                    <b>长度:</b> {edge['length']:.2f} km<br>
+                    <b>建设年份:</b> {year_display}<br>
+                    <b>轨道类型:</b> {type_names.get(edge['type'], edge['type'])}
                     """
                     
-                    year_text = str(int(edge['year'])) if pd.notna(edge['year']) else 'Unknown'
+                    year_text = str(int(year_val)) if (year_val is not None and not pd.isna(year_val)) else '年份缺失'
                     tooltip_content = f"""
                     <div style='font-size: 12px; font-weight: bold;'>
                         <div>🚂 {edge['start_name']} ↔ {edge['end_name']}</div>
