@@ -23,13 +23,13 @@ def normalize_name(name):
 def main():
     """Main function containing all execution logic"""
     try:
-        print("🚄 Railway Network Visualization Script")
+        print("Railway Network Visualization Script")
         print("=" * 50)
         
         # Get script directory
         script_dir = Path(__file__).parent.absolute()
         os.chdir(script_dir)
-        print(f"📂 Working Directory: {os.getcwd()}")
+        print(f"Working Directory: {os.getcwd()}")
         
         # Check required files
         required_files = ['stations.csv', 'tracks.csv']
@@ -38,11 +38,11 @@ def main():
                 raise FileNotFoundError(f"Missing required file: {file}")
         
         # Load data
-        print("\n📊 Loading data...")
+        print("\nLoading data...")
         stations_df = pd.read_csv('stations.csv')
         tracks_df = pd.read_csv('tracks.csv')
-        print(f"✓ Loaded {len(stations_df)} stations")
-        print(f"✓ Loaded {len(tracks_df)} track records")
+        print(f"[OK] Loaded {len(stations_df)} stations")
+        print(f"[OK] Loaded {len(tracks_df)} track records")
         
         # Create station mapping using normalized names
         name_to_id = {}
@@ -51,7 +51,7 @@ def main():
             name_to_id[normalized] = row['station_id']
         
         # Create network graph - Using MultiDiGraph to preserve parallel edges
-        print("\n🔗 Building network graph...")
+        print("\nBuilding network graph...")
         G = nx.MultiDiGraph()
         
         # Add nodes
@@ -104,10 +104,10 @@ def main():
                 if not end_id:
                     missing_stations.append(end_name)
         
-        print(f"✓ Successfully added {edges_added} edges")
+        print(f"[OK] Successfully added {edges_added} edges")
         if missing_stations:
             unique_missing = list(set(missing_stations))
-            print(f"⚠️ {len(unique_missing)} stations not found")
+            print(f"[WARN] {len(unique_missing)} stations not found")
         
         # Province color configuration
         province_list = list(set(nx.get_node_attributes(G, 'province').values()))
@@ -131,10 +131,10 @@ def main():
             'road': 'road'
         }
         
-        print(f"✓ Assigned colors to {len(province_list)} provinces")
+        print(f"[OK] Assigned colors to {len(province_list)} provinces")
         
         # Prepare map data
-        print("\n🗺️ Preparing map data...")
+        print("\nPreparing map data...")
         
         # Create station data
         stations_for_map = []
@@ -182,12 +182,12 @@ def main():
                     'type': edge_data['type']
                 })
         
-        print(f"✓ Prepared {len(stations_for_map)} stations and {len(edges_for_map)} connections")
-        print(f"✓ Total rail edges in network: {rail_edges_total}")
-        print(f"✓ Rail edges with coordinates: {len(edges_for_map)}")
+        print(f"[OK] Prepared {len(stations_for_map)} stations and {len(edges_for_map)} connections")
+        print(f"[OK] Total rail edges in network: {rail_edges_total}")
+        print(f"[OK] Rail edges with coordinates: {len(edges_for_map)}")
         
         # Create map
-        print("\n🎨 Creating Folium map...")
+        print("\nCreating Folium map...")
         center_lat = stations_map_df['latitude'].mean()
         center_lon = stations_map_df['longitude'].mean()
         
@@ -239,10 +239,10 @@ def main():
                     year_text = str(int(year_val)) if (year_val is not None and not pd.isna(year_val)) else '年份缺失'
                     tooltip_content = f"""
                     <div style='font-size: 12px; font-weight: bold;'>
-                        <div>🚂 {edge['start_name']} ↔ {edge['end_name']}</div>
-                        <div>📏 Length: {edge['length']:.1f}km</div>
-                        <div>📅 Built: {year_text}</div>
-                        <div>🛤️ Type: {type_names.get(edge['type'], edge['type'])}</div>
+                        <div>Route: {edge['start_name']} to {edge['end_name']}</div>
+                        <div>Length: {edge['length']:.1f} km</div>
+                        <div>Built: {year_text}</div>
+                        <div>Type: {type_names.get(edge['type'], edge['type'])}</div>
                     </div>
                     """
                     
@@ -263,7 +263,7 @@ def main():
         province_feature_groups = {}
         for province, count in province_counts:
             if count > 0:
-                fg = folium.FeatureGroup(name=f"🚉 {province} ({count} stations)", show=True)
+                fg = folium.FeatureGroup(name=f"{province} ({count} stations)", show=True)
                 province_feature_groups[province] = fg
                 fg.add_to(m)
         
@@ -316,12 +316,12 @@ def main():
              border-radius: 10px;
              box-shadow: 0 4px 8px rgba(0,0,0,0.3);
              text-align: center;">
-        <h3 style="margin: 0 0 12px 0; color: #2c3e50; font-weight: bold;">🚄 Railway Network Statistics</h3>
+        <h3 style="margin: 0 0 12px 0; color: #2c3e50; font-weight: bold;">Railway Network Statistics</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; text-align: left;">
-            <div><strong>🚉 Total Stations:</strong> {len(stations_for_map)}</div>
-            <div><strong>🛤️ Track Connections:</strong> {len(edges_for_map)}</div>
-            <div><strong>🗺️ Provinces Covered:</strong> {len(province_list)}</div>
-            <div><strong>📊 Track Types:</strong> {len(track_types)}</div>
+            <div><strong>Total Stations:</strong> {len(stations_for_map)}</div>
+            <div><strong>Track Connections:</strong> {len(edges_for_map)}</div>
+            <div><strong>Provinces Covered:</strong> {len(province_list)}</div>
+            <div><strong>Track Types:</strong> {len(track_types)}</div>
         </div>
         </div>
         """
@@ -331,10 +331,10 @@ def main():
         # Save map
         output_file = 'railway_network_folium.html'
         m.save(output_file)
-        print(f"✓ Map saved to: {output_file}")
+        print(f"[OK] Map saved to: {output_file}")
         
         # Connectivity analysis
-        print(f"\n📈 Network Analysis Results:")
+        print("\nNetwork Analysis Results:")
         print(f"- Nodes: {len(G.nodes())}")
         print(f"- Edges: {len(G.edges())}")
         
@@ -344,55 +344,55 @@ def main():
             print(f"- Connected Components: {components}")
             
             if components == 1:
-                print("✓ Network is fully connected")
+                print("[OK] Network is fully connected")
             else:
                 largest_component = max(nx.connected_components(G_undirected), key=len)
                 print(f"- Largest Connected Component: {len(largest_component)} stations")
         
         # Province statistics
         province_stats = stations_df['province'].value_counts()
-        print(f"\n📊 Covers {len(province_stats)} provinces:")
+        print(f"\nCovers {len(province_stats)} provinces:")
         for province, count in province_stats.head(10).items():
             print(f"  {province}: {count} stations")
         
         return True
         
     except FileNotFoundError as e:
-        print(f"\n❌ File Error: {e}")
-        print("💡 Please check if the following files exist:")
+        print(f"\nFile Error: {e}")
+        print("Hint: Please check if the following files exist:")
         print("   - stations.csv")
         print("   - tracks.csv")
         return False
         
     except pd.errors.EmptyDataError:
-        print(f"\n❌ Data file is empty or format error")
-        print("💡 Please check if CSV files contain valid data")
+        print("\nData file is empty or format error")
+        print("Hint: Please check if CSV files contain valid data")
         return False
         
     except ImportError as e:
-        print(f"\n❌ Missing dependency: {e}")
-        print("💡 Please run the following command to install:")
+        print(f"\nMissing dependency: {e}")
+        print("Hint: Please run the following command to install:")
         print("   pip install networkx pandas folium numpy")
         return False
         
     except Exception as e:
-        print(f"\n❌ Unexpected error: {e}")
+        print(f"\nUnexpected error: {e}")
         print(f"   Error type: {type(e).__name__}")
         return False
 
 if __name__ == "__main__":
-    print("🚄 China Railway Network Visualization Tool")
+    print("China Railway Network Visualization Tool")
     print("=" * 60)
     
     success = main()
     
     if success:
-        print("\n✅ Script execution completed!")
-        print("📁 Output file: railway_network_folium.html")
-        print(f"📍 File location: {os.getcwd()}")
+        print("\nScript execution completed!")
+        print("Output file: railway_network_folium.html")
+        print(f"File location: {os.getcwd()}")
     else:
-        print("\n❌ Script execution failed")
-        print("💡 Please check error messages and retry")
+        print("\nScript execution failed")
+        print("Hint: Please check error messages and retry")
     
-    print(f"\n🕒 Completion time: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"\nCompletion time: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}")
     input("Press Enter to exit...")
