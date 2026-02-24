@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_79fa17079f4ed6b96b76e50c32a665cd {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.css"/>
+</head>
+<body>
+    
+    
+    <div style="position: fixed; 
+         top: 20px; left: 50%; transform: translateX(-50%); 
+         width: 320px; height: 150px; 
+         background-color: rgba(255, 255, 255, 0.95); 
+         border: 3px solid #2c3e50; 
+         z-index: 9999; 
+         font-size: 14px; 
+         padding: 15px; 
+         border-radius: 10px;
+         box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+         text-align: center;">
+    <h3 style="margin: 0 0 12px 0; color: #2c3e50; font-weight: bold;">Railway Network (<= 1888)</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; text-align: left;">
+        <div><strong>Total Stations:</strong> 3</div>
+        <div><strong>Track Connections:</strong> 5</div>
+        <div><strong>Provinces Covered:</strong> 2</div>
+        <div><strong>Track Types:</strong> 1</div>
+    </div>
+    </div>
+    
+    
+            <div class="folium-map" id="map_79fa17079f4ed6b96b76e50c32a665cd" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_79fa17079f4ed6b96b76e50c32a665cd = L.map(
+                "map_79fa17079f4ed6b96b76e50c32a665cd",
+                {
+                    center: [39.54666633333334, 118.32666666666667],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 5,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_67430e9cac12c193b9e5dff62d04ec12 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_67430e9cac12c193b9e5dff62d04ec12.addTo(map_79fa17079f4ed6b96b76e50c32a665cd);
+        
+    
+            var tile_layer_ee45400ed368d07517927c25b59ea958 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ee45400ed368d07517927c25b59ea958.addTo(map_79fa17079f4ed6b96b76e50c32a665cd);
+        
+    
+            map_79fa17079f4ed6b96b76e50c32a665cd.fitBounds(
+                [[18.0, 73.0], [54.0, 135.0]],
+                {}
+            );
+        
+    
+            var feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_651b1641b360daab6853db81f40f1d30 = L.polyline(
+                [[39.119999, 117.2], [39.59, 118.18]],
+                {"bubblingMouseEvents": true, "color": "#FF0000", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#FF0000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf);
+        
+    
+        var popup_e9b68fa4705b29e2989a94d93daa4828 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7daac03fc5bba3319ce08c25a476b415 = $(`<div id="html_7daac03fc5bba3319ce08c25a476b415" style="width: 100.0%; height: 100.0%;">                 <b>轨道连接</b><br>                 Edge ID: 1<br>起点: 天津市<br>                 终点: 唐山市<br>                 <b>长度:</b> 71.98 km<br>                 <b>建设年份:</b> 1888<br>                 <b>轨道类型:</b> rail_both                 </div>`)[0];
+                popup_e9b68fa4705b29e2989a94d93daa4828.setContent(html_7daac03fc5bba3319ce08c25a476b415);
+            
+        
+
+        poly_line_651b1641b360daab6853db81f40f1d30.bindPopup(popup_e9b68fa4705b29e2989a94d93daa4828)
+        ;
+
+        
+    
+    
+            poly_line_651b1641b360daab6853db81f40f1d30.bindTooltip(
+                `<div>
+                     
+                <div style='font-size: 12px; font-weight: bold;'>
+                    <div>Route: 天津市 to 唐山市</div>
+                    <div>Length: 72.0 km</div>
+                    <div>Built: 1888</div>
+                    <div>Type: rail_both</div>
+                </div>
+                
+                 </div>`,
+                {
+  "permanent": false,
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_1c642dabbb6b2adfeca370b911edc58b = L.polyline(
+                [[39.119999, 117.2], [39.59, 118.18]],
+                {"bubblingMouseEvents": true, "color": "#FF0000", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#FF0000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf);
+        
+    
+        var popup_8b816a0f7bd601bbf7f9d5c8ece9a00e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_352883b9367c478cca67f1f062f24b77 = $(`<div id="html_352883b9367c478cca67f1f062f24b77" style="width: 100.0%; height: 100.0%;">                 <b>轨道连接</b><br>                 Edge ID: 2<br>起点: 天津市<br>                 终点: 唐山市<br>                 <b>长度:</b> 14.61 km<br>                 <b>建设年份:</b> 1888<br>                 <b>轨道类型:</b> rail_both                 </div>`)[0];
+                popup_8b816a0f7bd601bbf7f9d5c8ece9a00e.setContent(html_352883b9367c478cca67f1f062f24b77);
+            
+        
+
+        poly_line_1c642dabbb6b2adfeca370b911edc58b.bindPopup(popup_8b816a0f7bd601bbf7f9d5c8ece9a00e)
+        ;
+
+        
+    
+    
+            poly_line_1c642dabbb6b2adfeca370b911edc58b.bindTooltip(
+                `<div>
+                     
+                <div style='font-size: 12px; font-weight: bold;'>
+                    <div>Route: 天津市 to 唐山市</div>
+                    <div>Length: 14.6 km</div>
+                    <div>Built: 1888</div>
+                    <div>Type: rail_both</div>
+                </div>
+                
+                 </div>`,
+                {
+  "permanent": false,
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b7e4a8db5d0630cfb5db167a94b32183 = L.polyline(
+                [[39.119999, 117.2], [39.93, 119.6]],
+                {"bubblingMouseEvents": true, "color": "#FF0000", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#FF0000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf);
+        
+    
+        var popup_610665c51d46da9b48a62d3d3e50af57 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_cb556be49bba216ee685d84b492420cc = $(`<div id="html_cb556be49bba216ee685d84b492420cc" style="width: 100.0%; height: 100.0%;">                 <b>轨道连接</b><br>                 Edge ID: 3<br>起点: 天津市<br>                 终点: 秦皇岛市<br>                 <b>长度:</b> 349.58 km<br>                 <b>建设年份:</b> 1888<br>                 <b>轨道类型:</b> rail_both                 </div>`)[0];
+                popup_610665c51d46da9b48a62d3d3e50af57.setContent(html_cb556be49bba216ee685d84b492420cc);
+            
+        
+
+        poly_line_b7e4a8db5d0630cfb5db167a94b32183.bindPopup(popup_610665c51d46da9b48a62d3d3e50af57)
+        ;
+
+        
+    
+    
+            poly_line_b7e4a8db5d0630cfb5db167a94b32183.bindTooltip(
+                `<div>
+                     
+                <div style='font-size: 12px; font-weight: bold;'>
+                    <div>Route: 天津市 to 秦皇岛市</div>
+                    <div>Length: 349.6 km</div>
+                    <div>Built: 1888</div>
+                    <div>Type: rail_both</div>
+                </div>
+                
+                 </div>`,
+                {
+  "permanent": false,
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ec46db338d8605f567cac4c3da52d7b1 = L.polyline(
+                [[39.59, 118.18], [39.119999, 117.2]],
+                {"bubblingMouseEvents": true, "color": "#FF0000", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#FF0000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf);
+        
+    
+        var popup_692d44bfc70ec1fcc81391f7b53f9221 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_446a2b5c939cf370b435b7ebe70871fb = $(`<div id="html_446a2b5c939cf370b435b7ebe70871fb" style="width: 100.0%; height: 100.0%;">                 <b>轨道连接</b><br>                 Edge ID: 4<br>起点: 唐山市<br>                 终点: 天津市<br>                 <b>长度:</b> 28.64 km<br>                 <b>建设年份:</b> 1888<br>                 <b>轨道类型:</b> rail_both                 </div>`)[0];
+                popup_692d44bfc70ec1fcc81391f7b53f9221.setContent(html_446a2b5c939cf370b435b7ebe70871fb);
+            
+        
+
+        poly_line_ec46db338d8605f567cac4c3da52d7b1.bindPopup(popup_692d44bfc70ec1fcc81391f7b53f9221)
+        ;
+
+        
+    
+    
+            poly_line_ec46db338d8605f567cac4c3da52d7b1.bindTooltip(
+                `<div>
+                     
+                <div style='font-size: 12px; font-weight: bold;'>
+                    <div>Route: 唐山市 to 天津市</div>
+                    <div>Length: 28.6 km</div>
+                    <div>Built: 1888</div>
+                    <div>Type: rail_both</div>
+                </div>
+                
+                 </div>`,
+                {
+  "permanent": false,
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_27828e9d6b04cbb313cb3b63dbb61fbd = L.polyline(
+                [[39.59, 118.18], [39.93, 119.6]],
+                {"bubblingMouseEvents": true, "color": "#FF0000", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#FF0000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf);
+        
+    
+        var popup_93d42b0a19f71efa537f39fc2a6430c3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4420f321b435037608e65225b33c7385 = $(`<div id="html_4420f321b435037608e65225b33c7385" style="width: 100.0%; height: 100.0%;">                 <b>轨道连接</b><br>                 Edge ID: 5<br>起点: 唐山市<br>                 终点: 秦皇岛市<br>                 <b>长度:</b> 11.60 km<br>                 <b>建设年份:</b> 1888<br>                 <b>轨道类型:</b> rail_both                 </div>`)[0];
+                popup_93d42b0a19f71efa537f39fc2a6430c3.setContent(html_4420f321b435037608e65225b33c7385);
+            
+        
+
+        poly_line_27828e9d6b04cbb313cb3b63dbb61fbd.bindPopup(popup_93d42b0a19f71efa537f39fc2a6430c3)
+        ;
+
+        
+    
+    
+            poly_line_27828e9d6b04cbb313cb3b63dbb61fbd.bindTooltip(
+                `<div>
+                     
+                <div style='font-size: 12px; font-weight: bold;'>
+                    <div>Route: 唐山市 to 秦皇岛市</div>
+                    <div>Length: 11.6 km</div>
+                    <div>Built: 1888</div>
+                    <div>Type: rail_both</div>
+                </div>
+                
+                 </div>`,
+                {
+  "permanent": false,
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf.addTo(map_79fa17079f4ed6b96b76e50c32a665cd);
+        
+    
+            var feature_group_f239a24bbbec65988b08651dcd67c3d4 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_190dee5efc9e3fd0a93f2c1a87c1daee = L.circleMarker(
+                [39.59, 118.18],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_f239a24bbbec65988b08651dcd67c3d4);
+        
+    
+        var popup_3f2bf924d636c4ae23e8a5fc0bab0249 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b557c2b4db5d7360e17f6d457f1065eb = $(`<div id="html_b557c2b4db5d7360e17f6d457f1065eb" style="width: 100.0%; height: 100.0%;">                 <b>唐山市</b><br>                 <b>Province:</b> 河北省<br>                 <b>Coordinates:</b> (39.59°N, 118.18°E)<br>                 <b>Track Connections:</b> 4 tracks<br>                 <b>Station ID:</b> ST0155                 </div>`)[0];
+                popup_3f2bf924d636c4ae23e8a5fc0bab0249.setContent(html_b557c2b4db5d7360e17f6d457f1065eb);
+            
+        
+
+        circle_marker_190dee5efc9e3fd0a93f2c1a87c1daee.bindPopup(popup_3f2bf924d636c4ae23e8a5fc0bab0249)
+        ;
+
+        
+    
+    
+            circle_marker_190dee5efc9e3fd0a93f2c1a87c1daee.bindTooltip(
+                `<div>
+                     唐山市
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6665006f04558389e7f0f1659a7bead6 = L.circleMarker(
+                [39.93, 119.6],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4ECDC4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_f239a24bbbec65988b08651dcd67c3d4);
+        
+    
+        var popup_1ed2c71379eb971d208841134db843f3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7edfaad5928a79d705e72ab15351949a = $(`<div id="html_7edfaad5928a79d705e72ab15351949a" style="width: 100.0%; height: 100.0%;">                 <b>秦皇岛市</b><br>                 <b>Province:</b> 河北省<br>                 <b>Coordinates:</b> (39.93°N, 119.60°E)<br>                 <b>Track Connections:</b> 2 tracks<br>                 <b>Station ID:</b> ST0161                 </div>`)[0];
+                popup_1ed2c71379eb971d208841134db843f3.setContent(html_7edfaad5928a79d705e72ab15351949a);
+            
+        
+
+        circle_marker_6665006f04558389e7f0f1659a7bead6.bindPopup(popup_1ed2c71379eb971d208841134db843f3)
+        ;
+
+        
+    
+    
+            circle_marker_6665006f04558389e7f0f1659a7bead6.bindTooltip(
+                `<div>
+                     秦皇岛市
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_f239a24bbbec65988b08651dcd67c3d4.addTo(map_79fa17079f4ed6b96b76e50c32a665cd);
+        
+    
+            var feature_group_85e8689d6490794440e225b0be561625 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_09c960354bd0ebcd8be07d445bb6227b = L.circleMarker(
+                [39.119999, 117.2],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FADBD8", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_85e8689d6490794440e225b0be561625);
+        
+    
+        var popup_ccb90b7e5575132d7c6abda9070fdcd1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_24b24da0221f41463d98aaac060b972b = $(`<div id="html_24b24da0221f41463d98aaac060b972b" style="width: 100.0%; height: 100.0%;">                 <b>天津市</b><br>                 <b>Province:</b> 天津市<br>                 <b>Coordinates:</b> (39.12°N, 117.20°E)<br>                 <b>Track Connections:</b> 4 tracks<br>                 <b>Station ID:</b> ST0045                 </div>`)[0];
+                popup_ccb90b7e5575132d7c6abda9070fdcd1.setContent(html_24b24da0221f41463d98aaac060b972b);
+            
+        
+
+        circle_marker_09c960354bd0ebcd8be07d445bb6227b.bindPopup(popup_ccb90b7e5575132d7c6abda9070fdcd1)
+        ;
+
+        
+    
+    
+            circle_marker_09c960354bd0ebcd8be07d445bb6227b.bindTooltip(
+                `<div>
+                     天津市
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_85e8689d6490794440e225b0be561625.addTo(map_79fa17079f4ed6b96b76e50c32a665cd);
+        
+    
+            var layer_control_0cd8db5782b37acedbbaac2745419f96_layers = {
+                base_layers : {
+                    "CartoDB Positron" : tile_layer_67430e9cac12c193b9e5dff62d04ec12,
+                    "OpenStreetMap" : tile_layer_ee45400ed368d07517927c25b59ea958,
+                },
+                overlays :  {
+                    "rail_both (5 tracks)" : feature_group_cb0a3d5f6d6f15e01e7565d14201e3cf,
+                    "\u6cb3\u5317\u7701 (2 stations)" : feature_group_f239a24bbbec65988b08651dcd67c3d4,
+                    "\u5929\u6d25\u5e02 (1 stations)" : feature_group_85e8689d6490794440e225b0be561625,
+                },
+            };
+            let layer_control_0cd8db5782b37acedbbaac2745419f96 = L.control.layers(
+                layer_control_0cd8db5782b37acedbbaac2745419f96_layers.base_layers,
+                layer_control_0cd8db5782b37acedbbaac2745419f96_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_79fa17079f4ed6b96b76e50c32a665cd);
+
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_79fa17079f4ed6b96b76e50c32a665cd);
+        
+    
+            var measure_control_9473c5d1cfe74ee53da3aa27d7b351ea = new L.Control.Measure(
+                {
+  "position": "topright",
+  "primaryLengthUnit": "meters",
+  "secondaryLengthUnit": "miles",
+  "primaryAreaUnit": "sqmeters",
+  "secondaryAreaUnit": "acres",
+});
+            map_79fa17079f4ed6b96b76e50c32a665cd.addControl(measure_control_9473c5d1cfe74ee53da3aa27d7b351ea);
+
+            // Workaround for using this plugin with Leaflet>=1.8.0
+            // https://github.com/ljagis/leaflet-measure/issues/171
+            L.Control.Measure.include({
+                _setCaptureMarkerIcon: function () {
+                    // disable autopan
+                    this._captureMarker.options.autoPanOnFocus = false;
+                    // default function
+                    this._captureMarker.setIcon(
+                        L.divIcon({
+                            iconSize: this._map.getSize().multiplyBy(2)
+                        })
+                    );
+                },
+            });
+
+        
+</script>
+</html>
