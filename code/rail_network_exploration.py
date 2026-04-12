@@ -205,9 +205,9 @@ def select_key_years(summary_df: pd.DataFrame) -> KeyYears:
 def plot_station_timeseries(summary_df: pd.DataFrame, output_path: Path) -> None:
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(summary_df["year"], summary_df["station_count"], marker="o", color="#1f77b4")
-    ax.set_xlabel("年份")
-    ax.set_ylabel("铁路站点数量")
-    ax.set_title("铁路站点数量时序")
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Number of Railway Stations")
+    ax.set_title("Railway Station Count Time Series")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
     fig.savefig(output_path, dpi=300)
@@ -222,14 +222,14 @@ def plot_length_timeseries(summary_df: pd.DataFrame, output_path: Path) -> None:
         summary_df["total_length_km"],
         marker="o",
         color="#2ca02c",
-        label="铁路总里程",
+        label="Total Railway Length",
     )
     ax.plot(
         summary_df["year"],
         summary_df["high_speed_length_km"],
         marker="o",
         color="#d62728",
-        label="高速铁路里程",
+        label="High-Speed Railway Length",
     )
 
     for phase, color in EXPANSION_COLOR.items():
@@ -249,9 +249,9 @@ def plot_length_timeseries(summary_df: pd.DataFrame, output_path: Path) -> None:
                 alpha=0.08,
             )
 
-    ax.set_xlabel("年份")
-    ax.set_ylabel("铁路里程 (km)")
-    ax.set_title("铁路里程与扩张阶段")
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Railway Length (km)")
+    ax.set_title("Railway Length and Expansion Phases")
     ax.legend(loc="upper left")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
@@ -279,9 +279,9 @@ def plot_connection_type_timeline(connection_agg: pd.DataFrame, output_path: Pat
             color=color,
         )
 
-    ax.set_xlabel("年份")
-    ax.set_ylabel("累计新建连接数量")
-    ax.set_title("不同连接类型的累计出现情况")
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Cumulative New Connections")
+    ax.set_title("Cumulative Appearance of Different Connection Types")
     ax.legend(loc="upper left", frameon=False)
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
@@ -341,9 +341,9 @@ def plot_network_snapshot(
             sizes.append(12)
 
     ax.scatter(xs, ys, c=colors, s=sizes, alpha=0.9)
-    ax.set_title(f"铁路网络空间分布（<= {year}年）")
-    ax.set_xlabel("经度")
-    ax.set_ylabel("纬度")
+    ax.set_title(f"Railway Network Spatial Distribution (<= {year})")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
     ax.set_aspect("equal", adjustable="datalim")
     ax.grid(True, alpha=0.2)
     fig.tight_layout()
@@ -389,16 +389,16 @@ def plot_centrality_map(
         size = 40 + 300 * degree.get(node, 0.0)
         ax.scatter(lon, lat, s=size, color=color, edgecolor="#333333", linewidth=0.2, alpha=0.9)
 
-    ax.set_title(f"节点中心性（<= {year}年）")
-    ax.set_xlabel("经度")
-    ax.set_ylabel("纬度")
+    ax.set_title(f"Node Centrality (<= {year})")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
     ax.set_aspect("equal", adjustable="datalim")
     ax.grid(True, alpha=0.2)
 
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
     cbar = fig.colorbar(sm, ax=ax, fraction=0.03, pad=0.04)
-    cbar.set_label("介数中心性")
+    cbar.set_label("Betweenness Centrality")
 
     fig.tight_layout()
     fig.savefig(output_path, dpi=300)
@@ -407,8 +407,9 @@ def plot_centrality_map(
 
 def run_analysis() -> None:
     base_dir = Path(__file__).resolve().parent
-    stations_path = base_dir / "stations.csv"
-    tracks_path = base_dir / "tracks.csv"
+    data_dir = base_dir.parent / "data"
+    stations_path = data_dir / "stations.csv"
+    tracks_path = data_dir / "tracks.csv"
 
     stations_df = pd.read_csv(stations_path)
     tracks_df = pd.read_csv(tracks_path)
@@ -422,27 +423,30 @@ def run_analysis() -> None:
 
     key_years = select_key_years(summary_df)
 
-    output_dir = base_dir / "outputs"
-    maps_dir = output_dir / "maps"
-    centrality_dir = output_dir / "centrality"
-    output_dir.mkdir(exist_ok=True)
-    maps_dir.mkdir(exist_ok=True)
-    centrality_dir.mkdir(exist_ok=True)
+    results_dir = base_dir.parent / "results"
+    figures_dir = results_dir / "figures"
+    tables_dir = results_dir / "tables"
+    maps_dir = figures_dir / "maps"
+    centrality_dir = figures_dir / "centrality"
+    figures_dir.mkdir(parents=True, exist_ok=True)
+    tables_dir.mkdir(parents=True, exist_ok=True)
+    maps_dir.mkdir(parents=True, exist_ok=True)
+    centrality_dir.mkdir(parents=True, exist_ok=True)
 
-    plot_station_timeseries(summary_df, output_dir / "station_timeseries.png")
-    plot_length_timeseries(summary_df, output_dir / "length_timeseries.png")
-    plot_connection_type_timeline(connection_agg, output_dir / "connection_type_timeline.png")
+    plot_station_timeseries(summary_df, figures_dir / "station_timeseries.png")
+    plot_length_timeseries(summary_df, figures_dir / "length_timeseries.png")
+    plot_connection_type_timeline(connection_agg, figures_dir / "connection_type_timeline.png")
 
-    connection_agg.to_csv(output_dir / "connection_type_by_year.csv", index=False)
-    connection_first.to_csv(output_dir / "connection_type_first_year.csv", index=False)
-    summary_df.to_csv(output_dir / "growth_summary_with_phase.csv", index=False)
+    connection_agg.to_csv(tables_dir / "connection_type_by_year.csv", index=False)
+    connection_first.to_csv(tables_dir / "connection_type_first_year.csv", index=False)
+    summary_df.to_csv(tables_dir / "growth_summary_with_phase.csv", index=False)
 
     key_nodes = {normalize_name(name) for name in CORE_CITY_NAMES}
     for year in key_years.iter_years():
         plot_network_snapshot(rail_tracks, stations_df, year, maps_dir / f"network_snapshot_{year}.png", key_nodes)
         plot_centrality_map(rail_tracks, stations_df, year, centrality_dir / f"centrality_{year}.png")
 
-    print("Analysis outputs saved to:", output_dir)
+    print("Analysis outputs saved to:", results_dir)
     print("Key years:", list(key_years.iter_years()))
 
 

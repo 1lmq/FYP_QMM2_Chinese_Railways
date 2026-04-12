@@ -140,10 +140,13 @@ def plot_growth(summary_df: pd.DataFrame, output_path: Path) -> None:
 
 def main() -> None:
     base_dir = Path(__file__).resolve().parent
-    stations_path = base_dir / "stations.csv"
-    tracks_path = base_dir / "tracks.csv"
-    output_csv = base_dir / "rail_growth_summary.csv"
-    output_png = base_dir / "rail_growth_trends.png"
+    data_dir = base_dir.parent / "data"
+    results_dir = base_dir.parent / "results" / "tables"
+    results_dir.mkdir(parents=True, exist_ok=True)
+    stations_path = data_dir / "stations.csv"
+    tracks_path = data_dir / "tracks.csv"
+    output_csv = results_dir / "rail_growth_summary.csv"
+    output_png = base_dir.parent / "results" / "figures" / "rail_growth_trends.png"
 
     if not stations_path.exists() or not tracks_path.exists():
         raise FileNotFoundError("Required CSV files are missing in the network directory.")
