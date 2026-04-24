@@ -338,7 +338,7 @@ builder.assign_population_data(actual_population)
 @software{robustness_framework_2026,
   title={Population-Integrated Robustness Assessment Framework for Railway Networks},
   author={AI Assistant},
-  url={https://github.com/...},
+  url={https://github.com/1lmq/FYP_QMM2_Chinese_Railways},
   year={2026},
   note={GitHub repository}
 }

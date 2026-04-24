@@ -358,7 +358,7 @@ A: 参考 TECHNICAL_GUIDE.md 中的论文列表，对比其他国家的研究结
     title={Population-Integrated Robustness Assessment Framework 
            for Railway Networks},
     author={AI Assistant},
-    url={https://github.com/...},
+    url={https://github.com/1lmq/FYP_QMM2_Chinese_Railways},
     year={2026}
   }
 
